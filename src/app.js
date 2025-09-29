@@ -37,7 +37,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-//login api to authenticate a user
+//login Api to authenticate a user
 app.post("/login", async (req, res) => {
   //Creating new instance of User model
 
