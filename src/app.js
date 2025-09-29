@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 const app = express();
 app.use(express.json());
 
-//Signup Api to create a new user
+//Signup ApI to create a new user
 app.post("/signup", async (req, res) => {
   //Creating new instance of User model
   //console.log(req.body);
