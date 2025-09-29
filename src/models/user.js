@@ -36,13 +36,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       // You might want to add more validation for password strength
-      validate: {
-        validator: function (v) {
-          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/.test(v);
-        },
-        message:
-          "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number.",
+      validate(value) {
+        if (!validator.isStrongPassword(value)) {
+          throw new Error("Password is not strong enough");
+        }
       },
+      // validate: {
+      //   validator: function (v) {
+      //     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{2,}$/.test(v);
+      //   },
+      //   message:
+      //     "Password muuust be at least 2 characters long and contain at least one uppercase letter, one lowercase letter, and one number.",
+      // },
     },
     age: {
       type: Number,
