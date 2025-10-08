@@ -1,9 +1,9 @@
 const express = require("express");
-const { adminAuth } = require("../middlewares/auth");
+const { userAuth } = require("../middlewares/auth");
 
 const requestRouter = express.Router();
 
-requestRouter.post("/sendConnectionRequest", adminAuth, async (req, res) => {
+requestRouter.post("/sendConnectionRequest", userAuth, async (req, res) => {
   try {
     console.log("Connections sent");
     res.send("Sent message to Connections");

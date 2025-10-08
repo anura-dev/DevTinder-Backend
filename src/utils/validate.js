@@ -54,4 +54,56 @@ const validateLoginData = (req) => {
   }
 };
 
-module.exports = { validateSignUpData, validateLoginData };
+const validateEditProfileData = (req) => {
+  const allowedEditFields = [
+    "firstName",
+    "lastName",
+    "email",
+    "age",
+    "gender",
+    "photoUrl",
+    "skills",
+    "about",
+  ];
+
+  const isEditAllowed = Object.keys(req.body).every((field) =>
+    allowedEditFields.includes(field)
+  );
+  console.log(isEditAllowed);
+  return isEditAllowed;
+};
+
+const validateEditPassword = (req) => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    throw new Error("currentPassword and newPassword are required");
+  }
+  if (
+    !newPassword ||
+    typeof newPassword !== "string" ||
+    newPassword.trim().length < 2 ||
+    !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{2,}$/.test(newPassword)
+  ) {
+    throw new Error(
+      "Password must beeee at least 2 characters long and contain at least one uppercase letter, one lowercase letter, and one number."
+    );
+  }
+};
+
+const validateResetPassword = (req) => {
+  const { newPassword } = req.body;
+  if (!newPassword) {
+    throw new Error("New password is required.");
+  }
+  if (!validator.isStrongPassword(newPassword)) {
+    throw new Error("New password is too weak.");
+  }
+};
+
+module.exports = {
+  validateSignUpData,
+  validateLoginData,
+  validateEditProfileData,
+  validateEditPassword,
+  validateResetPassword,
+};
