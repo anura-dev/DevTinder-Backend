@@ -17,6 +17,7 @@ const profileRouter = express.Router();
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
+
     res.send(user);
   } catch (error) {
     res.status(401).send("Unauthorized: Invalid token");
@@ -105,6 +106,7 @@ profileRouter.patch("/edit/password", userAuth, async (req, res) => {
   try {
     validateEditPassword(req);
     const { currentPassword, newPassword } = req.body;
+
     const loggedInUser = req.user;
     const isCurrentPasswordValid = await loggedInUser.validatePassword(
       currentPassword
