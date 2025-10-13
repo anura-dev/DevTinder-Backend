@@ -65,7 +65,8 @@ authRouter.post("/login", async (req, res) => {
         { httpOnly: true }
       ); // Set the token in a cookie
 
-      res.send("Login successful");
+      //res.json({ user });
+      res.send(user);
     }
   } catch (error) {
     console.error(error);
