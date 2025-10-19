@@ -56,25 +56,25 @@ const userSchema = new mongoose.Schema(
       min: 0,
       max: 120,
       validate: {
-        validator: Number.isInteger,
-        message: "{VALUE} is not an integer value",
+        validator: (v) => v === null || Number.isInteger(v),
+        message: (props) => `${props.value} is not an integer value`,
       },
     },
     gender: {
       type: String,
-      //   validate(value) {
-      //     const validGenders = ["male", "female", "other"];
-      //     if (!validGenders.includes(value)) {
-      //       throw new Error("Invalid gender");
-      //     }
-      //   },
-      enum: ["male", "female", "other"],
-      lowercase: true,
+      validate(value) {
+        const validGenders = ["male", "female", "other"];
+        if (!validGenders.includes(value)) {
+          throw new Error("Invalid gender");
+        }
+      },
+      //enum: ["male", "female", "other", ""],
       trim: true,
     },
     photoUrl: {
       type: String,
-      default: "https://example.com/default-profile.png",
+      default:
+        "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Background-Clip-Art.png",
       ///match: [/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/, "Please fill a valid URL"],
       validate(value) {
         if (value && !validator.isURL(value)) {

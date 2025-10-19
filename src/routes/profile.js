@@ -24,17 +24,57 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+profileRouter.put("/profile/edit", userAuth, async (req, res) => {
   try {
+    // res.setHeader("Access-Control-Allow-Origin", "*");
+    // res.setHeader("Access-Control-Allow-Credentials", "true");
+    // res.setHeader("Access-Control-Max-Age", "1800");
+    // res.setHeader("Access-Control-Allow-Headers", "content-type");
+    // res.setHeader(
+    //   "Access-Control-Allow-Methods",
+    //   "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+    // );
     if (!validateEditProfileData(req)) {
       throw new Error("Invalid Edit Request");
     }
 
     const loggedInUser = req.user;
-    console.log(loggedInUser);
+    //console.log(loggedInUser);
 
-    Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
-    console.log(loggedInUser);
+    //Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
+
+    const allowedFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "age",
+      "gender",
+      "photoUrl",
+      "skills",
+      "about",
+    ];
+
+    // Update only valid fields and sanitize data
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined) {
+        // Validate age
+        if (key === "age" && (req.body.age === null || isNaN(req.body.age))) {
+          return res.status(400).json({ message: "Invalid age value" });
+        }
+
+        // Validate gender
+        if (
+          key === "gender" &&
+          !["male", "female", "other"].includes(req.body.gender)
+        ) {
+          return res.status(400).json({ message: "Invalid gender value" });
+        }
+
+        loggedInUser[key] = req.body[key];
+      }
+    }
+
+    //console.log(loggedInUser);
     await loggedInUser.save();
     //res.send(`${loggedInUser.firstName}! Your Profile has been edited successfully`);
     res.json({
@@ -43,7 +83,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(401).send("Unauthorized::: Invalid token ");
+    res.status(401).json({ message: error.message });
   }
 });
 

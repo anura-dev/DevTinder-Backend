@@ -12,7 +12,10 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
     const userConnectionRequests = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate("fromUserId", "firstName lastName age gender skills photoUrl");
+    }).populate(
+      "fromUserId",
+      "firstName lastName age gender skills photoUrl about"
+    );
     //.populate("fromUserId", ["firstName", "lastName"]);
 
     res.json({
@@ -35,8 +38,14 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         { fromUserId: loggedInUser._id, status: "accepted" },
       ],
     })
-      .populate("fromUserId", "firstName lastName age gender skills photoUrl")
-      .populate("toUserId", "firstName lastName age gender skills photoUrl");
+      .populate(
+        "fromUserId",
+        "firstName lastName age gender skills photoUrl about"
+      )
+      .populate(
+        "toUserId",
+        "firstName lastName age gender skills photoUrl about"
+      );
 
     const data = connectionRequests.map((row) => {
       if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
@@ -44,6 +53,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       }
       return row.fromUserId;
     });
+    console.log(data);
     res.json({ data });
   } catch (err) {
     res.status(400).send({ message: err.message });
@@ -88,7 +98,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
         { _id: { $ne: loggedInUser._id } }, // his own card
       ],
     })
-      .select("firstName lastName age gender skills photoUrl")
+      .select("firstName lastName age gender skills photoUrl about")
       .skip(skip)
       .limit(limit);
 

@@ -6,7 +6,7 @@ const userAuth = async (req, res, next) => {
     const { token } = req.cookies;
 
     if (!token) {
-      return res.status(401).send("Unauthorized: No token provided!!!!");
+      return res.status(401).send("Please Login");
     }
     //verify the token
     const decodedObj = await jwt.verify(token, "DEVTINDER@2025");
@@ -19,7 +19,7 @@ const userAuth = async (req, res, next) => {
 
     const user = await User.findById(_id);
     if (!user) {
-      throw new Error("User not found");
+      return res.status(401).send("User not found");
     }
     req.user = user;
     next(); // Proceed to the next middleware or route handler
