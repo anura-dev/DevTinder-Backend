@@ -2,6 +2,7 @@ const express = require("express");
 const connectDB = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 //your backend should know where your frontend is hosted that's why we give origin and credentials
@@ -43,8 +44,8 @@ app.use("/", userRouter);
 connectDB()
   .then(() => {
     console.log("DB Connection Successful");
-    app.listen(7777, () => {
-      console.log("Server is running on port 7777");
+    app.listen(process.env.PORT, () => {
+      console.log("Server is running on port " + process.env.PORT);
     });
   })
   .catch((err) => {
